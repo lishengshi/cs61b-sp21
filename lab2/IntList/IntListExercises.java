@@ -10,10 +10,16 @@ public class IntListExercises {
      */
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
-        while (head.rest != null) {
+        while (head != null) {
             head.first += c;
             head = head.rest;
         }
+    }
+
+    public static void main(String[] args) {
+        IntList of = IntList.of(1, 3, 5, 6);
+        addConstant(of,4);
+        System.out.println(of);
     }
 
     /**
@@ -25,8 +31,11 @@ public class IntListExercises {
      */
     public static void setToZeroIfMaxFEL(IntList L) {
         IntList p = L;
+        int currentMax = max(p);
         while (p != null) {
-            if (firstDigitEqualsLastDigit(max(p))) {
+            currentMax = max(p);
+            boolean firstEqualLast = firstDigitEqualsLastDigit(currentMax);
+            if (firstEqualLast) {
                 p.first = 0;
             }
             p = p.rest;
@@ -51,7 +60,7 @@ public class IntListExercises {
      */
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
-        while (x > 10) {
+        while (x >= 10) {
             x = x / 10;
         }
         int firstDigit = x % 10;
@@ -65,18 +74,17 @@ public class IntListExercises {
      * @param lst IntList from Lecture
      * @return True if there was an update to the list
      */
-    public static boolean squarePrimes(IntList lst) {
+    public static boolean squarePrimes(IntList lst,boolean isChanged) {
         // Base Case: we have reached the end of the list
-        if (lst == null) {
-            return false;
+        IntList head = lst;
+        if (head == null) {
+            return isChanged;
         }
-
-        boolean currElemIsPrime = Primes.isPrime(lst.first);
-
+        boolean currElemIsPrime = Primes.isPrime(head.first);
         if (currElemIsPrime) {
-            lst.first *= lst.first;
+            head.first *= head.first;
+            isChanged = true;
         }
-
-        return currElemIsPrime || squarePrimes(lst.rest);
+        return squarePrimes(head.rest,isChanged);
     }
 }
